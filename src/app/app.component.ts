@@ -65,6 +65,23 @@ export class AppComponent implements OnInit {
       }
     }
   }
+
+  getLightMode() {
+    if (this.airPurifierState) {
+      switch (+this.airPurifierState.LightMode) {
+        case 0: return 'None';
+        case 1: return 'Rainbow';
+        case 2: return 'Strip blue';
+        case 3: return 'Strip green';
+        case 4: return 'Strip red';
+        case 5: return 'Pulse blue';
+        case 6: return 'Pulse green';
+        case 7: return 'Pulse red';
+        case 8: return 'Spectrum';
+        case 9: return 'Auto';
+      }
+    }
+  }
 }
 
 export class AirPurifierState {

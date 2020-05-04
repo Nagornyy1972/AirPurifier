@@ -33,15 +33,24 @@
       </div>
     </div>
   </div>
+  <div class="current-state">
+    <div>
+      Fan speed: {{airPurifierState.FanPower}}
+    </div>
+    <div>
+      Light mode: {{getLightMode()}}
+    </div>
+  </div>
   <div>
     <div id="video-bg" style="opacity: 0.5">
       <video width="100%"
              height="auto"
              preload="auto"
-             [autoplay]="true"
-             [loop]="true"
+             autoplay="true"
+             loop="true"
+             [muted]="true"
              muted="muted">
-        <source src="../assets/Blue.mp4" type="video/mp4">
+        <source src="../assets/blue.mp4" type="video/mp4">
       </video>
     </div>
   </div>
