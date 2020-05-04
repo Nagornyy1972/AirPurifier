@@ -1,0 +1,52 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div #dataContainer
+     id="dataContainer"
+     *ngIf="airPurifierState.PM25" [ngStyle]="{ 'background-color': getColor() }"
+     (click)="getAirData(airPurifierState.LightMode, airPurifierState.Speed)"
+     class="card-header header">
+  <h3 style="text-shadow: 0 0 1px white;z-index: 2; color: white">
+    {{ title }}
+  </h3>
+  <h4 style="text-shadow: 0 0 1px white;z-index: 2; color: white">
+    {{ subTitle }}
+  </h4>
+  <div style="display: flex; justify-content: center; padding-top: 20px; opacity: 1">
+    <div class="circle">
+      <h3 *ngIf="airPurifierState"
+          style="text-shadow: 0 0 1px white;z-index: 2; color: white; padding-top: 8vw">
+        {{ airPurifierState.PM25 }} ug/m3
+      </h3>
+      <h4 style="text-shadow: 0 0 1px white;z-index: 2; color: white">
+        {{ 'PM 2.5' }}
+      </h4>
+      <div class="line"></div>
+      <div style="display: flex; justify-content: space-evenly">
+        <div>
+          <div>t°</div>
+          <div>{{airPurifierState.Temperature}} C</div>
+        </div>
+        <div class="line2"></div>
+        <div>
+          <div>Humidity</div>
+          <div>{{airPurifierState.Humidity}} %</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div id="video-bg" style="opacity: 0.5">
+      <video width="100%"
+             height="auto"
+             preload="auto"
+             [autoplay]="true"
+             [loop]="true"
+             muted="muted">
+        <source src="../assets/Blue.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</div>
+<div>
+
+</div>
+<router-outlet></router-outlet>
