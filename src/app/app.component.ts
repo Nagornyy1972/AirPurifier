@@ -11,6 +11,20 @@ export class AppComponent implements OnInit {
   public title = 'Air Purifier';
   public subTitle = 'HS-laba healthy house ';
   public airPurifierState: AirPurifierState;
+  public lightModesList: LightMode[] = [
+    {id: 0, name: 'None'},
+    {id: 1, name: 'Rainbow'},
+    {id: 2, name: 'Strip blue'},
+    {id: 3, name: 'Strip green'},
+    {id: 4, name: 'Strip red'},
+    {id: 5, name: 'Pulse blue'},
+    {id: 6, name: 'Pulse green'},
+    {id: 7, name: 'Pulse red'},
+    {id: 8, name: 'Spectrum'},
+    {id: 9, name: 'Auto'},
+  ];
+  public modeListOpen = false;
+  public selectedMode: LightMode;
 
   @ViewChild('dataContainer') dataContainer: ElementRef;
 
@@ -21,7 +35,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.getAirData(this.airPurifierState.LightMode, this.airPurifierState.Speed);
-    setInterval(this.refreshData, 10000);
+    setInterval(this.refreshData, 20000);
   }
 
   private refreshData() {
@@ -32,9 +46,10 @@ export class AppComponent implements OnInit {
   private getAirData(mode: number, speed: number) {
     const request = 'http://192.168.1.104/fanSettings?mode=' + mode + '&&speed=' + speed;
     this.http.get(request).pipe(take(1)).subscribe((data: AirPurifierState) => {
-      if (data.Humidity) {
+      if (!isNaN(+data.Humidity)) {
         this.airPurifierState = data;
         this.airPurifierState.Speed = 10 - this.airPurifierState.RenbowSpeed;
+      } else {
       }
     });
   }
@@ -82,6 +97,27 @@ export class AppComponent implements OnInit {
       }
     }
   }
+
+  getLightModeName(modeId: number) {
+    console.log(modeId);
+    if (this.lightModesList.find( e => e.id === +modeId)) {
+      return this.lightModesList.find( e => e.id === +modeId).name;
+    }
+    return '';
+  }
+
+  checkedMode(lightMode) {
+    return lightMode.id === +this.airPurifierState.LightMode;
+  }
+
+  onSelectMode(event) {
+    console.log(event);
+  }
+
+  onChange(event) {
+    console.log('on change');
+    console.log(event);
+  }
 }
 
 export class AirPurifierState {
@@ -97,4 +133,9 @@ export class AirPurifierState {
     this.LightMode = 9;
     this.Speed = 0;
   }
+}
+
+export class LightMode {
+  id: number;
+  name: string;
 }

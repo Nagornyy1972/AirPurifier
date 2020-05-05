@@ -9,14 +9,31 @@ $color8: red;
 $color9: crimson;
 
 .header {
-  height: 70vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 1;
+  background-size: cover;
+  width: 100%;
+  height: 64vh;
+  -webkit-transition: background-color 2s ease-out 0s;
+  -moz-transition: background-color 2s ease-out 0s;
+  -o-transition: background-color 2s ease-out 0s;
+  transition: background-color 2s ease-out 0s;
+}
+
+.data-container {
+  height: 64vh;
   display: flex;
   flex-direction: column;
   align-content: center;
   color: white;
-  background-color: $color1;
+  //background-color: $color1;
   text-align:center;
-  transition: 1s;
+  //transition: 1s;
 }
 
 .circle {
@@ -36,10 +53,9 @@ $color9: crimson;
   left: 0;
   overflow: hidden;
   z-index: 1;
-  //background: url(bg/daisy-stock-poster.jpg) no-repeat #94a233;
   background-size: cover;
   width: 100%;
-  height: 70%;
+  height: 64vh;
 }
 
 #video-bg > video {
@@ -89,7 +105,16 @@ span {
   display: flex;
   justify-content: space-between;
   color: white;
-  margin-top: 8vh;
+  margin-top: 3vh;
   z-index: 2;
+}
+
+.controls {
+  width: 100%;
+  height: 36vh;
+}
+
+.lightMode {
+  width: 100%;
 }
 

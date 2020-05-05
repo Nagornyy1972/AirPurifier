@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "AirPruffer": {
+    "AirPurifier": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/AirPruffer",
+            "outputPath": "dist/AirPurifier",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -63,18 +63,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "AirPruffer:build"
+            "browserTarget": "AirPurifier:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "AirPruffer:build:production"
+              "browserTarget": "AirPurifier:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "AirPruffer:build"
+            "browserTarget": "AirPurifier:build"
           }
         },
         "test": {
@@ -108,7 +108,7 @@
         }
       }
     },
-    "AirPruffer-e2e": {
+    "AirPurifier-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -117,11 +117,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "AirPruffer:serve"
+            "devServerTarget": "AirPurifier:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "AirPruffer:serve:production"
+              "devServerTarget": "AirPurifier:serve:production"
             }
           }
         },
@@ -137,5 +137,5 @@
       }
     }
   },
-  "defaultProject": "AirPruffer"
+  "defaultProject": "AirPurifier"
 }

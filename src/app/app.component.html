@@ -1,9 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div #dataContainer
      id="dataContainer"
-     *ngIf="airPurifierState.PM25" [ngStyle]="{ 'background-color': getColor() }"
+     *ngIf="airPurifierState.PM25"
      (click)="getAirData(airPurifierState.LightMode, airPurifierState.Speed)"
-     class="card-header header">
+     class="card-header data-container">
   <h3 style="text-shadow: 0 0 1px white;z-index: 2; color: white">
     {{ title }}
   </h3>
@@ -21,12 +21,12 @@
       </h4>
       <div class="line"></div>
       <div style="display: flex; justify-content: space-evenly">
-        <div>
+        <div style="width: 20vw">
           <div>t°</div>
           <div>{{airPurifierState.Temperature}} C</div>
         </div>
         <div class="line2"></div>
-        <div>
+        <div style="width: 20vw">
           <div>Humidity</div>
           <div>{{airPurifierState.Humidity}} %</div>
         </div>
@@ -35,19 +35,20 @@
   </div>
   <div class="current-state">
     <div>
-      Fan speed: {{airPurifierState.FanPower}}
+      Fan speed: {{airPurifierState.FanPower}} rpm
     </div>
     <div>
       Light mode: {{getLightMode()}}
     </div>
   </div>
-  <div>
+  <div class="header"
+       [ngStyle]="{ 'background-color': getColor()}">
     <div id="video-bg" style="opacity: 0.5">
       <video width="100%"
              height="auto"
              preload="auto"
-             autoplay="true"
-             loop="true"
+             autoplay="autoplay"
+             loop="loop"
              [muted]="true"
              muted="muted">
         <source src="../assets/blue.mp4" type="video/mp4">
@@ -55,7 +56,32 @@
     </div>
   </div>
 </div>
-<div>
-
+<div class="controls">
+  <div class="lightMode" (click)="modeListOpen = !modeListOpen">
+    {{airPurifierState ? getLightModeName(airPurifierState.LightMode) : ''}}
+  </div>
+  <div *ngIf="modeListOpen">
+    <div *ngFor="let lightMode of lightModesList"
+         (click)="onSelectMode($event)">
+      <input type="radio"
+             name="lightModeRadio"
+             (change)="onChange($event)"
+             [checked]="checkedMode(lightMode)"
+             [value]="lightMode">
+      {{lightMode.name}}
+    </div>
+  </div>
 </div>
-<router-outlet></router-outlet>
+<div class="buttons">
+  <div>
+
+  </div>
+  <div>
+
+  </div>
+  <div>
+
+  </div>
+</div>
+
+
