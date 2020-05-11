@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     {id: 9, name: 'Auto'},
   ];
   public modeListOpen = false;
-  public selectedMode: LightMode;
+  public spinner: boolean = false;
 
   @ViewChild('dataContainer') dataContainer: ElementRef;
 
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAirData(this.airPurifierState.LightMode, this.airPurifierState.Speed);
+    this.getAirData(undefined, undefined);
     setInterval(this.refreshData, 20000);
   }
 
@@ -44,18 +44,23 @@ export class AppComponent implements OnInit {
   }
 
   private getAirData(mode: number, speed: number) {
-    const request = 'http://192.168.1.104/fanSettings?mode=' + mode + '&&speed=' + speed;
+    const request = 'http://192.168.1.104/fanSettings'
+      + (mode?'?mode=' + mode : '')
+      + (speed !== undefined ?'&&speed=' + speed : '');
+    console.log(request);
+    this.spinner = true;
     this.http.get(request).pipe(take(1)).subscribe((data: AirPurifierState) => {
+      this.spinner = false;
       if (!isNaN(+data.Humidity)) {
         this.airPurifierState = data;
-        this.airPurifierState.Speed = 10 - this.airPurifierState.RenbowSpeed;
+        this.airPurifierState.Speed = Math.round(+this.airPurifierState.FanPower / 116);
       } else {
       }
     });
   }
 
   private getColor() {
-    if (this.airPurifierState) {
+    if (this.airPurifierState && +this.airPurifierState.LightMode === 9) {
       switch (+this.airPurifierState.Speed) {
         case 0:
           return 'green';
@@ -99,40 +104,37 @@ export class AppComponent implements OnInit {
   }
 
   getLightModeName(modeId: number) {
-    console.log(modeId);
     if (this.lightModesList.find( e => e.id === +modeId)) {
       return this.lightModesList.find( e => e.id === +modeId).name;
     }
     return '';
   }
 
-  checkedMode(lightMode) {
-    return lightMode.id === +this.airPurifierState.LightMode;
-  }
-
   onSelectMode(event) {
-    console.log(event);
+    this.airPurifierState.LightMode = event;
+    this.modeListOpen = false;
+    this.getAirData(this.airPurifierState.LightMode, this.airPurifierState.Speed);
   }
 
-  onChange(event) {
-    console.log('on change');
-    console.log(event);
+  setSpeed(event) {
+    this.airPurifierState.FanPower = event;
+    this.airPurifierState.Speed = Math.round(+this.airPurifierState.FanPower / 116);
+    this.getAirData(this.airPurifierState.LightMode, this.airPurifierState.Speed);
+    console.log()
+  }
+
+  changeSpeedEnable() {
+    return +this.airPurifierState.LightMode !== 9 && +this.airPurifierState.LightMode !== 0
   }
 }
 
 export class AirPurifierState {
   LightMode: number;
-  RenbowSpeed: number;
   FanPower: number;
   Temperature: number;
   Humidity: number;
   PM25: number;
   Speed: number;
-
-  constructor() {
-    this.LightMode = 9;
-    this.Speed = 0;
-  }
 }
 
 export class LightMode {
