@@ -94,7 +94,7 @@
               [unit]="'RPM'">
   </app-slider>
 </div>
-<div *ngIf="screen === 2" class="charts">
+<div *ngIf="screen === 2 && getData" class="charts">
   <google-chart class="chart-container"
                 [height]="135"
                 [width]="360"

@@ -24,35 +24,19 @@ export class AppComponent implements OnInit {
     {id: 9, name: 'Auto'},
   ];
   public modeListOpen = false;
-  public spinner: boolean = false;
-  public screen: number = 1;
+  public spinner = false;
+  public screen = 1;
 
   private type = 'LineChart';
-  data = [
-    ['0', {v: 81, f: 18}, {v: 20, f: 18}, {v: 10, f: 18}],
-    ['1', {v: 80, f: 16}, {v: 21, f: 18}, {v: 15, f: 18}],
-    ['2', {v: 20, f: 19}, {v: 25, f: 18}, {v: 35, f: 18}],
-    ['3', {v: 10, f: 21}, {v: 27, f: 18}, {v: 56, f: 18}],
-    ['4', {v: 40, f: 25}, {v: 23, f: 18}, {v: 80, f: 18}],
-    ['5', {v: 60, f: 23}, {v: 18, f: 18}, {v: 115, f: 18}],
-    ['6', {v: 81, f: 16}, {v: 16, f: 18}, {v: 97, f: 18}],
-    ['7', {v: 74, f: 11}, {v: 11, f: 18}, {v: 88, f: 18}],
-  ];
+  data = [];
+  protected maxY = 20;
+  protected minY = 10;
   private columnNames = ['PM2.5', 't°', 'h(%)', 'PM2.5(ug/m3)'];
   private options = {
-    // tooltip: {isHtml: true},
-    // bar: {
-    //   groupWidth: '95%'
-    // },
-    // annotations: {
-    //   textStyle: {color: 'black', fontSize: 11},
-    //   alwaysOutside: true,
-    //   stemColor: 'transparent'
-    // },
     vAxis: {
       textStyle: {color: '#000000'},
       gridlines: {color: 'transparent', count: 6},
-      viewWindow: {min: 0, max: 150}
+      viewWindow: {min: this.minY - 5, max: this.maxY + 5}
     },
     animation: {
       duration: 1000,
@@ -60,12 +44,14 @@ export class AppComponent implements OnInit {
     },
     title: 'real-time charts',
     curveType: 'function',
-    legend: { position: 'bottom' }
+    legend: {position: 'bottom'}
   };
 
 
   @ViewChild('dataContainer') dataContainer: ElementRef;
 
+  private measurement = 0;
+  protected getData = false;
 
   constructor(private http: HttpClient) {
     this.airPurifierState = new AirPurifierState();
@@ -77,21 +63,48 @@ export class AppComponent implements OnInit {
   }
 
   private refreshData() {
-    let dataContainerRef = document.getElementById('dataContainer');
-    if (dataContainerRef) dataContainerRef.click();
+    const dataContainerRef = document.getElementById('dataContainer');
+    if (dataContainerRef) {
+      dataContainerRef.click();
+    }
   }
 
   private getAirData(mode: number, speed: number) {
     const request = 'http://192.168.1.104/fanSettings'
-      + (mode?'?mode=' + mode : '')
-      + (speed !== undefined ?'&&speed=' + speed : '');
+      + (mode ? '?mode=' + mode : '')
+      + (speed !== undefined ? '&&speed=' + speed : '');
     console.log(request);
     this.spinner = true;
+
     this.http.get(request).pipe(take(1)).subscribe((data: AirPurifierState) => {
       this.spinner = false;
       if (!isNaN(+data.Humidity)) {
+        this.getData = false;
         this.airPurifierState = data;
         this.airPurifierState.Speed = Math.round(+this.airPurifierState.FanPower / 116);
+        this.data.push(['' + this.measurement,
+          {v: +this.airPurifierState.Temperature},
+          {v: +this.airPurifierState.Humidity},
+          {v: +this.airPurifierState.PM25}]);
+        this.measurement++;
+        this.maxY = Math.max(this.maxY, +this.airPurifierState.PM25, +this.airPurifierState.Temperature, +this.airPurifierState.Humidity);
+        this.minY = Math.min(this.minY, +this.airPurifierState.PM25, +this.airPurifierState.Temperature, +this.airPurifierState.Humidity);
+        this.options = {
+          vAxis: {
+            textStyle: {color: '#000000'},
+            gridlines: {color: 'transparent', count: 6},
+            viewWindow: {min: this.minY - 5, max: this.maxY + 5}
+          },
+          animation: {
+            duration: 1000,
+            easing: 'out',
+          },
+          title: 'real-time charts',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+        console.log(this.data);
+        this.getData = !this.getData;
       } else {
       }
     });
@@ -127,23 +140,33 @@ export class AppComponent implements OnInit {
   getLightMode() {
     if (this.airPurifierState) {
       switch (+this.airPurifierState.LightMode) {
-        case 0: return 'None';
-        case 1: return 'Rainbow';
-        case 2: return 'Strip blue';
-        case 3: return 'Strip green';
-        case 4: return 'Strip red';
-        case 5: return 'Pulse blue';
-        case 6: return 'Pulse green';
-        case 7: return 'Pulse red';
-        case 8: return 'Spectrum';
-        case 9: return 'Auto';
+        case 0:
+          return 'None';
+        case 1:
+          return 'Rainbow';
+        case 2:
+          return 'Strip blue';
+        case 3:
+          return 'Strip green';
+        case 4:
+          return 'Strip red';
+        case 5:
+          return 'Pulse blue';
+        case 6:
+          return 'Pulse green';
+        case 7:
+          return 'Pulse red';
+        case 8:
+          return 'Spectrum';
+        case 9:
+          return 'Auto';
       }
     }
   }
 
   getLightModeName(modeId: number) {
-    if (this.lightModesList.find( e => e.id === +modeId)) {
-      return this.lightModesList.find( e => e.id === +modeId).name;
+    if (this.lightModesList.find(e => e.id === +modeId)) {
+      return this.lightModesList.find(e => e.id === +modeId).name;
     }
     return '';
   }
@@ -158,11 +181,10 @@ export class AppComponent implements OnInit {
     this.airPurifierState.FanPower = event;
     this.airPurifierState.Speed = Math.round(+this.airPurifierState.FanPower / 116);
     this.getAirData(this.airPurifierState.LightMode, this.airPurifierState.Speed);
-    console.log()
   }
 
   changeSpeedEnable() {
-    return +this.airPurifierState.LightMode !== 9 && +this.airPurifierState.LightMode !== 0
+    return +this.airPurifierState.LightMode !== 9 && +this.airPurifierState.LightMode !== 0;
   }
 }
 
