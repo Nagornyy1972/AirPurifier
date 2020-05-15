@@ -53,7 +53,7 @@
     </div>
   </div>
 </div>
-<div style="width:100%">
+<div  *ngIf="screen === 1" style="width:100%">
   <div class="controls"
        (click)="modeListOpen = !modeListOpen">
     <div class="lightMode">
@@ -85,7 +85,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="changeSpeedEnable()">
+<div *ngIf="screen === 1 && changeSpeedEnable()">
   <app-slider [minValue]="0"
               [maxValue]="1040"
               [value]="airPurifierState.FanPower"
@@ -94,16 +94,26 @@
               [unit]="'RPM'">
   </app-slider>
 </div>
+<div *ngIf="screen === 2" class="charts">
+  <google-chart class="chart-container"
+                [height]="135"
+                [width]="360"
+                [type]="type"
+                [data]="data"
+                [columnNames]="columnNames"
+                [options]="options">
+  </google-chart>
+</div>
 <div class="buttons">
-  <div class="button">
+  <div class="button" (click)="screen = 1">
     <img src="../assets/3.ico" alt="" class="ico1">
     <div class="button-text" style="margin-top: -9px">control</div>
   </div>
-  <div class="button">
+  <div class="button" (click)="screen = 2">
     <img src="../assets/2.ico" alt="" class="ico">
     <div class="button-text">graph</div>
   </div>
-  <div class="button">
+  <div class="button" (click)="screen = 3">
     <img src="../assets/4.ico" alt="" class="ico">
     <div class="button-text">about</div>
   </div>

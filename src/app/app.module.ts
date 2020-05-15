@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {SliderComponent} from './primitives/slider/slider..component';
+import {GoogleChartsModule} from "angular-google-charts";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {SliderComponent} from './primitives/slider/slider..component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    GoogleChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
