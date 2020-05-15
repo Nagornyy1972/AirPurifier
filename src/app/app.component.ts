@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
   @ViewChild('dataContainer') dataContainer: ElementRef;
 
   private measurement = 0;
-  protected getData = false;
+  public getData = false;
 
   constructor(private http: HttpClient) {
     this.airPurifierState = new AirPurifierState();
